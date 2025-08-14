@@ -75,11 +75,7 @@ class MyApp extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
-      chipTheme: base.chipTheme.copyWith(
-        color: WidgetStatePropertyAll(Colors.grey.shade100),
-        labelStyle: const TextStyle(color: Colors.black87),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
+      chipTheme: base.chipTheme,
       cardTheme: base.cardTheme.copyWith(
         elevation: 0.5,
         surfaceTintColor: Colors.white,

@@ -27,6 +27,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final meals = context.read<MealProvider>();
     await meals.refreshDay(auth.user!.id);
     await meals.refreshWeek(auth.user!.id);
+    if (!mounted) return;
     setState(() => _loading = false);
   }
 
@@ -129,7 +130,9 @@ class _WeeklyBarChart extends StatelessWidget {
                     heightFactor: heightFactor,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary.withOpacity(0.2 + heightFactor * 0.7),
+                        color: Theme.of(context).colorScheme.primary.withValues(
+                          alpha: (0.2 + heightFactor * 0.7).clamp(0.0, 1.0).toDouble(),
+                        ),
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),

@@ -28,6 +28,7 @@ class _MealPlanScreenState extends State<MealPlanScreen> {
     final auth = context.read<AuthProvider>();
     if (auth.user == null) return;
     await context.read<MealProvider>().refreshDay(auth.user!.id);
+    if (!mounted) return;
     setState(() => _loading = false);
   }
 
@@ -40,10 +41,12 @@ class _MealPlanScreenState extends State<MealPlanScreen> {
       lastDate: DateTime.now().add(const Duration(days: 365)),
       initialDate: initial,
     );
+    if (!mounted) return;
     if (picked != null) {
       meals.setDate(picked);
       final auth = context.read<AuthProvider>();
       await meals.refreshDay(auth.user!.id);
+      if (!mounted) return;
       setState(() {});
     }
   }
@@ -127,7 +130,7 @@ class _MealPlanScreenState extends State<MealPlanScreen> {
                               grams: grams,
                               caloriesPer100g: selected!.caloriesPer100g,
                             );
-                            if (mounted) Navigator.of(ctx).pop();
+                            if (ctx.mounted) Navigator.of(ctx).pop();
                           },
                     icon: const Icon(Icons.add),
                     label: const Text('Add item'),

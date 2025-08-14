@@ -17,9 +17,13 @@ Future<void> main() async {
     // If .env not found, continue with defaults. It's optional and documented in .env.example.
   }
 
-  // Initialize FoodService to load JSON foods early
+  // Initialize FoodService to load JSON foods early (non-fatal if it fails)
   final foodService = FoodService();
-  await foodService.init();
+  try {
+    await foodService.init();
+  } catch (_) {
+    // If initialization fails (e.g., asset not found), continue startup to avoid a blank screen.
+  }
 
   runApp(MyApp(foodService: foodService));
 }
@@ -96,7 +100,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<AuthProvider>(
         builder: (context, auth, _) {
           return MaterialApp(
-            title: dotenv.maybeGet('APP_NAME') ?? 'Diet Planner',
+            title: dotenv.get('APP_NAME', fallback: 'Diet Planner'),
             theme: _buildTheme(),
             home: auth.isAuthenticated ? const HomeScreen() : const LoginScreen(),
           );

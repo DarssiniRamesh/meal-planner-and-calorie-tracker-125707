@@ -1,54 +1,106 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'providers/auth_provider.dart';
+import 'providers/meal_provider.dart';
+import 'services/food_service.dart';
+import 'screens/auth/login_screen.dart';
+import 'screens/home/home_screen.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    // Load environment variables if available.
+    await dotenv.load(fileName: ".env");
+  } catch (_) {
+    // If .env not found, continue with defaults. It's optional and documented in .env.example.
+  }
+
+  // Initialize FoodService to load JSON foods early
+  final foodService = FoodService();
+  await foodService.init();
+
+  runApp(MyApp(foodService: foodService));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final FoodService foodService;
+  const MyApp({super.key, required this.foodService});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'AI Build Tool',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
+  ThemeData _buildTheme() {
+    // Colors based on work item
+    const primaryHex = 0xFF4CAF50;
+    const secondaryHex = 0xFF8BC34A;
+    const accentHex = 0xFFFF9800;
+
+    final base = ThemeData(
+      brightness: Brightness.light,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color(primaryHex),
+        primary: const Color(primaryHex),
+        secondary: const Color(secondaryHex),
+        tertiary: const Color(accentHex),
+        brightness: Brightness.light,
       ),
-      home: const MyHomePage(title: 'diet_planner_frontend'),
+      useMaterial3: true,
+    );
+
+    return base.copyWith(
+      scaffoldBackgroundColor: Colors.white,
+      appBarTheme: base.appBarTheme.copyWith(
+        backgroundColor: Colors.white,
+        elevation: 0.5,
+        foregroundColor: const Color(primaryHex),
+      ),
+      inputDecorationTheme: base.inputDecorationTheme.copyWith(
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        filled: true,
+        fillColor: Colors.grey.shade50,
+      ),
+      bottomNavigationBarTheme: base.bottomNavigationBarTheme.copyWith(
+        selectedItemColor: const Color(primaryHex),
+        unselectedItemColor: Colors.grey.shade600,
+        showUnselectedLabels: true,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(primaryHex),
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+      ),
+      chipTheme: base.chipTheme.copyWith(
+        color: WidgetStatePropertyAll(Colors.grey.shade100),
+        labelStyle: const TextStyle(color: Colors.black87),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      cardTheme: base.cardTheme.copyWith(
+        elevation: 0.5,
+        surfaceTintColor: Colors.white,
+        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
     );
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'diet_planner_frontend App is being generated...',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 20),
-            CircularProgressIndicator(),
-          ],
-        ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()..loadSession()),
+        ChangeNotifierProvider<MealProvider>(create: (_) => MealProvider()),
+        Provider<FoodService>.value(value: foodService),
+      ],
+      child: Consumer<AuthProvider>(
+        builder: (context, auth, _) {
+          return MaterialApp(
+            title: dotenv.maybeGet('APP_NAME') ?? 'Diet Planner',
+            theme: _buildTheme(),
+            home: auth.isAuthenticated ? const HomeScreen() : const LoginScreen(),
+          );
+        },
       ),
     );
   }

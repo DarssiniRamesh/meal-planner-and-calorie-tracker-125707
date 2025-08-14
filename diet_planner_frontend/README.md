@@ -1,16 +1,32 @@
-# diet_planner_frontend
+# Diet Planner Frontend
 
-A new Flutter project.
+A Flutter mobile app that lets users:
+- Register and log in
+- Create and edit meal plans
+- Search food items from local JSON
+- Automatically calculate calories from grams and calories per 100g
+- View daily and weekly summaries
+- Browse meal history
+- Enjoy a modern, light-themed, tab-based layout with Dashboard, Meal Plan, Food Search, and Profile
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+- Optionally create a `.env` file based on `.env.example` in the project root to configure `APP_NAME`.
+- Ensure Flutter SDK is installed.
 
-A few resources to get you started if this is your first Flutter project:
+### Run
+```
+flutter pub get
+flutter run
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Data Storage
+- Local persistence using `sqflite`.
+- Session management using `shared_preferences`.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Assets
+- `assets/foods.json` contains the food catalog used for search and calorie calculation.
+
+### Notes
+- Long press a meal item in the Meal Plan tab to delete it.
+- Use the add button (+) to add items to specific meal types (Breakfast, Lunch, Dinner, Snack).

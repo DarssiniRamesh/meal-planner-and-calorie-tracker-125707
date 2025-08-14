@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:diet_planner_frontend/main.dart';
+import 'package:diet_planner_frontend/services/food_service.dart';
 
 void main() {
-  testWidgets('App generation message displayed', (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
+  testWidgets('App renders and shows login or home', (WidgetTester tester) async {
+    final foodService = FoodService();
+    // Load foods manually for test
+    await foodService.init();
+    await tester.pumpWidget(MyApp(foodService: foodService));
 
-    expect(find.text('diet_planner_frontend App is being generated...'), findsOneWidget);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-  });
-
-  testWidgets('App bar has correct title', (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
-
-    expect(find.text('diet_planner_frontend'), findsOneWidget);
+    expect(find.byType(MaterialApp), findsOneWidget);
+    // Should find at least one of the following screens/widgets
+    expect(find.textContaining('Login', findRichText: true).evaluate().isNotEmpty ||
+        find.textContaining('Dashboard', findRichText: true).evaluate().isNotEmpty, true);
   });
 }

@@ -130,6 +130,7 @@ class _WeeklyBarChart extends StatelessWidget {
                     heightFactor: heightFactor,
                     child: Container(
                       decoration: BoxDecoration(
+                        // Prefer modern Flutter API with precise alpha control.
                         color: Theme.of(context).colorScheme.primary.withValues(
                           alpha: (0.2 + heightFactor * 0.7).clamp(0.0, 1.0).toDouble(),
                         ),

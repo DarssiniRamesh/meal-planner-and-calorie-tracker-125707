@@ -1,0 +1,22 @@
+[
+  { "name": "Apple", "calories_per_100g": 52 },
+  { "name": "Banana", "calories_per_100g": 96 },
+  { "name": "Chicken Breast (grilled)", "calories_per_100g": 165 },
+  { "name": "Rice (cooked)", "calories_per_100g": 130 },
+  { "name": "Broccoli (raw)", "calories_per_100g": 34 },
+  { "name": "Oatmeal (cooked)", "calories_per_100g": 71 },
+  { "name": "Egg (boiled)", "calories_per_100g": 155 },
+  { "name": "Almonds", "calories_per_100g": 579 },
+  { "name": "Greek Yogurt (plain)", "calories_per_100g": 59 },
+  { "name": "Avocado", "calories_per_100g": 160 },
+  { "name": "Salmon (grilled)", "calories_per_100g": 208 },
+  { "name": "Beef (lean, grilled)", "calories_per_100g": 250 },
+  { "name": "Sweet Potato (baked)", "calories_per_100g": 90 },
+  { "name": "Carrot (raw)", "calories_per_100g": 41 },
+  { "name": "Orange", "calories_per_100g": 47 },
+  { "name": "Pasta (cooked)", "calories_per_100g": 131 },
+  { "name": "Cheddar Cheese", "calories_per_100g": 403 },
+  { "name": "Tofu (firm)", "calories_per_100g": 76 },
+  { "name": "Spinach (raw)", "calories_per_100g": 23 },
+  { "name": "Blueberries", "calories_per_100g": 57 }
+]
